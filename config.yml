@@ -39,12 +39,17 @@ yolov5_deepsort:
 
   data_source : "video file"   # source can be set to either "video file" or "webcam"
   webcam_id: 2                # if using external webcam. Please modify based on your system
-  data_path: "./input_videos/carla_output9.mp4" # path to the video file if you are using a video as input
-  coordinates_path: "/home/droms/Desktop/yolov5-deepsort/src/utils/coordinates/carla10.npy"
+  data_path: "./input_videos/carla_output11.mp4" # path to the video file if you are using a video as input
+  coordinates_path: "/home/droms/Desktop/yolov5-deepsort/src/utils/coordinates/carla11.npy"
+  area_coordinates_path: "/home/droms/Desktop/yolov5-deepsort/src/utils/coordinates/video11.npy"
   frame_width:  1280
   frame_height:  720
+  
+  area_scales: [0.3, 0.45, 0.6, 0.75]
  
  main:
   model_name: 'last.pt'
   disp_fps: True 
   disp_obj_count: False
+
+

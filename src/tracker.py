@@ -4,7 +4,10 @@ import numpy as np
 import yaml
 
 from src.utils import get_polygon_center, get_rectangle_center, is_point_inside_polygon 
+from src.geom_utils import get_ellipse_contour, is_point_on_ellipse
 from collections import deque
+
+import requests
 
 
 with open('config.yml' , 'r') as f:
@@ -90,6 +93,9 @@ class DetectorManager():
 
     def __init__(self):
 
+        self.scales = [0.3, 0.45, 0.6, 0.75]
+
+        self.area_coords = []
         self.polygon_coords = None
         self.zone_types = None
 
@@ -97,7 +103,7 @@ class DetectorManager():
         self.pedestrians_at_risk = dict()
 
         self.num_samplings = 120
-        self.frame_threshold = 50
+        self.frame_threshold = 45
         self.warning_duration = 100 # in frames
 
     
@@ -116,6 +122,29 @@ class DetectorManager():
 
         self.polygons_cords = np.delete(self.polygons_cords, -1)  # removing zone classes from the list of coordinates
         self.polygons_cords = np.array(self.polygons_cords)
+    
+
+    def retrieve_coordinates(self):
+        
+        with open('config.yml' , 'r') as f:
+            datal = yaml.safe_load(f)['yolov5_deepsort']['dataloader']
+
+        coordinates_file_path = datal['area_coordinates_path']
+
+        # poligon coordinates and zone type
+        coords = np.load(coordinates_file_path, allow_pickle=True) # loading coordinates and classes of zones from segmented_Areas file)
+
+        for i, area in enumerate(coords):
+
+            area_object = dict()
+
+            area_object["center"] = tuple(area["center"])
+            area_object["axes"] = tuple(area["axes"])
+            area_object["angle"] = area["angle"]
+            area_object["startAngle"] = area["startAngle"]
+            area_object["endAngle"] = area["endAngle"]
+
+            self.area_coords.append(area_object)
 
     
     def check_hazard(self, entity_id, entity_bbox, frame_number):
@@ -132,7 +161,42 @@ class DetectorManager():
             else: 
                 self.detections_in_zone[entity_id].append(0)
 
+        
+        risk_exposure_level = sum(self.detections_in_zone[entity_id])
+        print(risk_exposure_level)
+        if risk_exposure_level > self.frame_threshold:
+            self.pedestrians_at_risk[entity_id] = frame_number
+        
+        if entity_id in self.pedestrians_at_risk:
+            if frame_number - self.pedestrians_at_risk[entity_id] < self.warning_duration:
+                hazard = True
+            else: 
+                hazard = False
 
+        return hazard
+    
+    def check_area_hazard(self, entity_id, entity_bbox, frame_number):
+        
+        hazard = False
+
+        if entity_id not in self.detections_in_zone:
+            self.detections_in_zone[entity_id] = deque(maxlen=self.num_samplings + 1)
+
+        for i, area in enumerate(self.area_coords):
+            rings_hazard_contribution = 0
+
+            for j, scale in enumerate(self.scales):
+
+                scaled_axes = (int(area["axes"][0] * scale), int(area["axes"][1] * scale))
+
+                area_contour = get_ellipse_contour(area["center"], scaled_axes, area["angle"], area["startAngle"], area["endAngle"])
+                area_contour = get_ellipse_contour(area["center"], scaled_axes, area["angle"], 0, 360)
+
+                pt = tuple([int(round(entity_bbox[0])), int(round(entity_bbox[1])) ])
+                if is_point_on_ellipse(pt, area_contour):
+                    rings_hazard_contribution += 1 * (1 - scale)
+
+            self.detections_in_zone[entity_id].append(rings_hazard_contribution)       
 
         
         risk_exposure_level = sum(self.detections_in_zone[entity_id])
@@ -152,6 +216,7 @@ class DetectorManager():
 
     def generate_warning(self, img, frame_number):
         
+        # displaying the warning on wide screen
         overlay = img.copy()
         cv2.rectangle(overlay, (10, 30), (790, 120), (0, 0, 0), -1) 
         alpha = 0.7 
@@ -165,6 +230,13 @@ class DetectorManager():
             cv2.putText(img, ' !', (740, 73), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
 
         cv2.putText(img, label, (20, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+
+        # sending warning to the http endpoint
+        endpoint = "https://api.example.com/v1/data"
+
+        params = {}
+
+        # response = requests.get(endpoint, params=params)
 
 
 
@@ -191,7 +263,8 @@ class DeepSortTracker():
                 today=TODAY)
 
         self.detectorManager = DetectorManager()
-        self.detectorManager.retrieve_polygons()
+        #self.detectorManager.retrieve_polygons()
+        self.detectorManager.retrieve_coordinates()
 
 
     
@@ -213,7 +286,7 @@ class DeepSortTracker():
             
 
             # checking on disabled pedestrians about to cross
-            if self.detectorManager.check_hazard(track_id, bbox_center, frame_number):
+            if self.detectorManager.check_area_hazard(track_id, bbox_center, frame_number):
                 # if a disabled pedestrian is aproaching the road, then generate a real-time warning
                 self.detectorManager.generate_warning(img, frame_number)
                 # the pedestrian track is colored in red

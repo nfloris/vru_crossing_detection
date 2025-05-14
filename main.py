@@ -11,6 +11,8 @@ from src.tracker import DeepSortTracker
 from src.dataloader import cap
 from src.utils import get_iou, display_overlap
 
+from src.geom_utils import get_ellipse_contour, point_on_ellipse, is_point_on_ellipse
+
 
 # Parameters from config.yml file
 with open('config.yml' , 'r') as f:
@@ -22,16 +24,19 @@ with open('config.yml' , 'r') as f:
 
 
 coordinates_file_path = datal['coordinates_path']
+area_coordinates_file_path = datal['area_coordinates_path']
 
 
 # poligon coordinates and zone type
 polygons_cords = np.load(coordinates_file_path, allow_pickle=True) # loading coordinates and classes of zones from segmented_Areas file
+area_coords = np.load(area_coordinates_file_path, allow_pickle=True)
 
 zone_types = polygons_cords[-1] # the zone classes are saved
 print(zone_types)
 
 polygons_cords = np.delete(polygons_cords, -1)  # removing zone classes from the list of coordinates
 polygons_cords = np.array(polygons_cords)
+#area_coords = np.array(area_coords)
 
 # Add the src directory to the module search path
 sys.path.append(os.path.abspath('src'))
@@ -48,6 +53,15 @@ with open('config.yml' , 'r') as f:
 
 with open('config.yml' , 'r') as f:
     datal =yaml.safe_load(f)['yolov5_deepsort']['dataloader']
+
+
+colors = [(0, 0, 255), # red
+          (0, 128, 255), # orange
+          (0, 255, 255), # yellow
+          (0, 255, 0) # green
+          ]
+
+scales = [0.3, 0.45, 0.6, 0.75] # axes fraction for each ellipse sub-ring
 
 
 
@@ -165,12 +179,40 @@ while cap.isOpened():
     #cv2.putText(img, f'DETECTED OBJECTS: {detections[2]}', (20, 140), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255), 1)
     
     # draw the areas and show the number of violations in each of them
+    '''
     for cords in polygons_cords:
         cords = np.array(cords)
         # draw areas
         color = (66, 215, 245) # RGB format
         cords_reshape = cords.reshape((-1, 1, 2))
         img = cv2.polylines(img, [cords_reshape], isClosed=True, color=color[::-1], thickness=2)
+    '''
+
+    for area in area_coords:
+
+        color  = (66, 215, 245)
+
+        center = tuple(area["center"])
+        axes = tuple(area["axes"])
+        angle = area["angle"]
+        start_angle = area["startAngle"]
+        end_angle = area["endAngle"]
+
+        for i, scale in enumerate(scales):
+            scaled_axes = (int(axes[0] * scale), int(axes[1] * scale))
+
+            
+            cv2.ellipse(img, center, scaled_axes, angle, start_angle, end_angle, colors[i], 2)
+
+            area_contour = get_ellipse_contour(center, scaled_axes, angle, start_angle, end_angle)
+
+            if end_angle - start_angle < 360:
+                pt1 = point_on_ellipse(center, scaled_axes, angle, start_angle)
+                pt2 = point_on_ellipse(center, scaled_axes, angle, end_angle)
+            
+            cv2.line(img, pt1, pt2, colors[i], 2)
+        
+
 
     cv2.imshow('img',img)
     out.write(img)

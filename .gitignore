@@ -1,19 +1,19 @@
-output1.mp4
-output2.mp4
-output3.mp4
-output4.mp4
-output_5.mp4
-output_6.mp4
-output_7.mp4
+outputs/output1.mp4
+outputs/output2.mp4
+outputs/output3.mp4
+outputs/output4.mp4
+outputs/output_5.mp4
+outputs/output_6.mp4
+outputs/output_7.mp4
 output_videosoutput.mp4
 
 
-yolov5l.pt
-yolov5s.pt
-yolov8s.pt
+models/yolov5l.pt
+models/yolov5s.pt
+models/yolov8s.pt
 
-lu_last.pt
-lu_best.pt
+models/lu_last.pt
+models/lu_best.pt
 
 images
 results
@@ -26,4 +26,11 @@ input_videos/carla_output6.mp4
 input_videos/carla_output7.mp4
 input_videos/carla_output8.mp4
 
-src/get_frame.py
+input_videos/Verona1.mp4
+input_videos/collision0.mp4
+
+src/utils/get_frame.py
+src/utils/screen.png
+src/screen1.png
+src/screen2.png
+
