@@ -3,9 +3,11 @@
 ![Python Version](https://img.shields.io/badge/python-3.9-blue)
 ![PyTorch Version](https://img.shields.io/badge/PyTorch-2.0.0%2Bcu117-EE4C2C.svg?style=flat-square&logo=PyTorch&logoColor=white&logoWidth=40)
 
+Questo progetto è un’implementazione open-source di un sistema per il rilevamento e l’allerta dell’attraversamento da parte di utenti deboli della strada (VRU), basato su YOLOv5 per la rilevazione degli oggetti e DeepSORT per il tracciamento multi-oggetto.
+L’obiettivo principale è migliorare la sicurezza stradale identificando quando un utente debole della strada (ad esempio un pedone in sedia a rotelle) sta avvicinando o sta tentando di attraversare la strada, generando avvisi tempestivi.
+YOLOv5 viene utilizzato per rilevare i VRU in ogni frame video, mentre DeepSORT ne traccia i movimenti nel tempo, assegnando ID univoci.
+Il progetto è implementato in Python utilizzando il framework di deep learning PyTorch.
 
-
-This project is an open-source implementation of a real-time object tracking system based on the YOLOv5 and DeepSORT algorithms. This project aims to provide a solution for object tracking in videos, with the ability to track multiple objects simultaneously in real-time. The YOLOv5 model is used to detect objects in each frame, and then the DeepSORT algorithm is used to track these objects across multiple frames and associate them with unique IDs. The project is implemented in Python using the PyTorch deep learning framework.
 
 <p align="center">
 
@@ -13,8 +15,8 @@ This project is an open-source implementation of a real-time object tracking sys
 
 </p>
 
-## Dependencies
-You should install the following packages in your environment to run this project: 
+## Dipendenze 
+Per eseguire il codice, è necessario installare le seguenti dipendenze
 
 * ultralytics 
 ``` bash
@@ -24,34 +26,40 @@ pip install ultralytics
 ``` bash
 pip install deep-sort-realtime
 ```
-* [pytorch](https://pytorch.org/) - if you want CUDA support with pytorch upgrade the installation based on the CUDA version your system uses.  
+* [pytorch](https://pytorch.org/) - if you want CUDA support with pytorch upgrade the installation based on the CUDA version your system uses. Per avere il supporto di CUDA con pytorch installare la versione più recente sulla base della versione di CUDA utilizzata dal proprio sistema. 
 
-The list of dependencies for the project can also be found on the [environment.yml](environment.yml) file.
+La lista delle dipendenze per il progetto può essere trovata nel file [environment.yml](environment.yml).
 
-To recreate the environment used to develop this project, you can also create a conda environment using the environment.yml file provided:
+Per ricreare l'environment utilizzato per lo sviluppo del codice, è possibile creare un ambiente conda utilizzando il file environment.yml appositamente fornito:
 ``` bash
 conda env create -f environment.yml
 ```
-
-This will create a new environment named stereo-visual-odometry-env with all the necessary packages installed. You can then activate the environment using the following command:
+Questo script creerà un ambiente denominato yolov5-deepsort con tutti i pacchetti necessari installati. Una volta creato, è possibile attivare l'ambiente con il seguente comando:
 
 ``` bash
 conda activate yolov5-deepsort
 ```
+Una volta attivato l'ambiente, sarà possibile eseguire gli script del progetto e utilizzare i pacchetti elencati in precedenza.
 
-Once the environment is activated, you can run the project and use the packages listed above.
 
-
-## Directory Structure 
+## Struttura delle directory 
 
 ```bash
 yolov5-deepsort
 ├── main.py
 ├── src
-    ├── dataloader.py
-    ├── detector.py
+    └── dataloader.py
+    └── detector.py
     └── tracker.py
+    └── utils.py
+    └── geom_utils.py
+    ├── utils
+         └── select_area.py
+         ├── coordinates
+             └── file.npy
+├── models      
 ├── data
+├── outputs
 ├── environment.yml
 ├── config.yml
 ├── README.md
@@ -60,61 +68,61 @@ yolov5-deepsort
 ``` 
 
 
-## Running the Project
-#### Step 1: Assuming the dependencies have been installed and the environment activated ,clone the repository
+## Esseguire il progetto
+#### Step 1: Assumendo che tutte le dipendenze siano state installate e che l'ambiente sia attivo, clonare la repository.
 
 ``` bash
-git clone https://github.com/Ayushman-Choudhuri/yolov5-deepsort
+git clone https://github.com/nfloris/vru_crossing_detection
 
 ```
 
-### Step 2: Setting data source
-* Option 1: Webcam  
-  - If the input video frame is a webcam, in the **config.yml** file ,change the **data_source** parameter in the **dataloader** section to "webcam".
-  - Open the **config.yml** file and change the **webcam_id** to the one on your respective computer. You can list all the video devices in the **/dev** directory sorted by time in reverse order. To list them please use the following command. 
-```bash
-  ls -ltrh /dev/video*
+### Step 2: Impostare una sorgente video
+Accedere al codice sorgente dalla cartella *src* del repository. Dal file **config.yml** è possibile impostare una serie di parametri di configurazione del progetto. Per impostare una sorgente video, è necessario modificare il parametro **input_path** dalla sezione **dataloader**.
+Per comodità, tutti i video di input sono posizionati nella cartella *input_videos* del repository.
 
-``` 
-* Option 3: Video File 
-  - Input your video file in .mp4 format in the data directory (as shown in the directory structure)
-  - Open the **config.yml** file and update the **data_path** parameter in the **dataloader** section
+### Step 2: Selezione geometrica delle aree in prossimità degli attraversamenti pedonali
+Per fare in modo che il sistema sia in grado di generare allarmi per pedoni in procinto di attraversare la strada è mnecessario fornire delle informazioni preliminari sulla configurazione dello scenario, specificando le coordinate geografiche delle aree limitrofe agli attraversamenti.
+A tal proposito, il file **src/utils/select_area.py** permette, a partire da una schermata, di tracciare manualmente su schermo i contorni geometrici delle aree di interesse. 
+Con un click sullo schermo si potranno disegnare delle forme sferiche e ellittiche, editabili tramite i comandi elencati di seguito:
 
-### Step 3: Run the main.py file 
+     - a/d -> rotazione verso sinistra/destra
+     - w/e -> modifica dell'angolo iniziale/finale (permette di tracciare semicerchi)
+     - tasti direzionali -> permettono di spostare l'area lungo l'asse x e y
+     - ENTER -> conferma dell'area inserita
+     - r -> reset
+     - ESC -> chiusura del programma e salvataggio
+
+Una volta terminata l'operazione le informazioni geometriche sulle aree inserite sono salvate in un file di estensione .npy. 
+Nella **dataloader** del file **config.yml** è possibile trovare il parametro **area_coordinates_path**, il quale contiene il percorso del file npy contenente le coordinate delle aree specificate per lo scenario di interesse. Per comodità, tutte i file di coordinate sono posizionati all'interno della cartella *src/utils/coordinates* del repository. 
+
+
+### Step 3: Eseguire il file main.py 
 ```bash
 python3 main.py
 
-``` 
-## Results 
-
-The project was run on a openly available [video](https://pixabay.com/videos/people-commerce-shop-busy-mall-6387/) on pixabay showing people in a mall
-
-<p align="center">
-<img align="center" src="https://github.com/Ayushman-Choudhuri/yolov5-deepsort/blob/main/results/mall.gif">
-</p>
-
-The Project was also run on a openly available [video](https://pixabay.com/videos/cars-motorway-speed-motion-traffic-1900/) on pixabay showing cars on the road.
-
-<p align="center">
-<img align="center" src="https://github.com/Ayushman-Choudhuri/yolov5-deepsort/blob/main/results/cars.gif">
-</p>
-
-## Evaluation
-DeepSORT is a multi-object tracking algorithm, so to judge its performance we need special metrics and benchmark datasets. We will be using CLEARMOT metrics to judge the performance of our DeepSORT on the [MOT17](https://motchallenge.net/results/MOT17/) dataset.ClearMOT is a framework for evaluating the performance of a tracker over different parameters. 
-
-This evaluation will be conducted soon. 
+```
 
 
-## Known Issues
+## Risultati 
 
-1. There is a bug in the tracker.py file due to which currently the configuration parameters are not getting read from the config.yml file. This will be resolved soon. 
-2. Due to the nature of the YOLO algorithm , when people stand too close to each other in the video, the total number of detections are lower than expected. This shall be resolved in a future project with Fast RCNN. 
+Dei risultati di esempio sono consultabili all'interno della cartella *outputs*
 
-## Future Work 
 
-1. Implementation of Fast RCNN for object detection. This would be slower than YOLOv5 but would be able to accurately detect people when they stand too close to each other in crowded areas. 
-2. C++ Implementation
-3. ROS implementation
+## Miglioramenti futuri
+
+1. Sono previsti ulteriori addestramenti dei modelli per migliorare le performance dell'Object Detection.
+2. Arricchimento del dataset utilizzato.
+3. Nuovi esperimenti su ulteriori utenti deboli della strada.
+4. Esperimenti su ulteriori scenari sintetici e esperimenti sul campo.
+5. Post-processing dei rilevamenti e dei tracciamenti in modo da migliorare le prestazioni complessive del sistema
+
+
+   
+## References
+
+* [YOLO Algorithm](https://arxiv.org/abs/1506.02640)
+* [DeepSORT code repository](https://github.com/nwojke/deep_sort)
+* [DATASET]("")
 
 ## References
 
