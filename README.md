@@ -123,10 +123,3 @@ Dei risultati di esempio sono consultabili all'interno della cartella *outputs*
 * [YOLO Algorithm](https://arxiv.org/abs/1506.02640)
 * [DeepSORT code repository](https://github.com/nwojke/deep_sort)
 * [DATASET](https://universe.roboflow.com/yolotest-vzrks/person-mm3cw)
-
-## References
-
-* [YOLO Algorithm](https://arxiv.org/abs/1506.02640)
-* [SORT Algorithm](https://arxiv.org/abs/1703.07402)
-* [DeepSORT code repository](https://github.com/nwojke/deep_sort)
-* [DeepSORT explained](https://medium.com/augmented-startups/deepsort-deep-learning-applied-to-object-tracking-924f59f99104)
