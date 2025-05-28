@@ -122,7 +122,7 @@ Dei risultati di esempio sono consultabili all'interno della cartella *outputs*
 
 * [YOLO Algorithm](https://arxiv.org/abs/1506.02640)
 * [DeepSORT code repository](https://github.com/nwojke/deep_sort)
-* [DATASET]("")
+* [DATASET](https://universe.roboflow.com/yolotest-vzrks/person-mm3cw)
 
 ## References
 
