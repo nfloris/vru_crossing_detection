@@ -26,7 +26,7 @@ pip install ultralytics
 ``` bash
 pip install deep-sort-realtime
 ```
-* [pytorch](https://pytorch.org/) - if you want CUDA support with pytorch upgrade the installation based on the CUDA version your system uses. Per avere il supporto di CUDA con pytorch installare la versione più recente sulla base della versione di CUDA utilizzata dal proprio sistema. 
+* [pytorch](https://pytorch.org/) - Per avere il supporto di CUDA con pytorch installare la versione più recente sulla base della versione di CUDA utilizzata dal proprio sistema. 
 
 La lista delle dipendenze per il progetto può essere trovata nel file [environment.yml](environment.yml).
 
