@@ -91,7 +91,7 @@ python3 select_area.py
 
 si aprirà una finestra di selezione in cui caricare un’immagine (formati supportati: png, jpg, jpeg, bmp), corrispondente a un frame o a una cattura dello scenario da analizzare.
 
-<img src="images/selection.png" alt="Finestra di selezione di immagini" width="60%">
+<img src="images/selection.png" alt="Finestra di selezione di immagini" width="40%">
 
 Con un click destro del mouse è possibile inserire un’area centrata nel punto selezionato. Tenendo premuto e trascinando, se ne possono regolare dimensioni, larghezza e altezza. Al rilascio del tasto, l’area rimane modificabile per rotazione e angoli iniziale/finale tramite i comandi da tastiera riportati di seguito:
 
