@@ -90,7 +90,9 @@ python3 select_area.py
 ```
 
 si aprirà una finestra di selezione in cui caricare un’immagine (formati supportati: png, jpg, jpeg, bmp), corrispondente a un frame o a una cattura dello scenario da analizzare.
-![Finestra di selezione di immagini](images/selection.png)
+
+<img src="images/selection.png" alt="Finestra di selezione di immagini" width="60%">
+
 Con un click destro del mouse è possibile inserire un’area centrata nel punto selezionato. Tenendo premuto e trascinando, se ne possono regolare dimensioni, larghezza e altezza. Al rilascio del tasto, l’area rimane modificabile per rotazione e angoli iniziale/finale tramite i comandi da tastiera riportati di seguito:
 
  - a/d → rotazione verso sinistra/destra
@@ -100,8 +102,11 @@ Con un click destro del mouse è possibile inserire un’area centrata nel punto
  - r → reset
 
 ![Manipolazione dell'area](images/area2.png)
+
 Dopo la conferma con ENTER, è possibile assegnare la direzione di percorrenza prevista, cche rappresenta il movimento atteso attraverso quell’area e deve coincidere con la direzione dell’attraversamento pedonale a cui essa fa riferimento. Una freccia direzionale indicherà il verso di attraversamento ed è regolabile tramite i tasti a/d o trascinamento con il mouse. La conferma avviene con ENTER o doppio click destro. Per annullare l’inserimento di un’area è sufficiente premere r.
+
 ![Conferma della direzione](images/area1.png)
+
 Al termine della configurazione, le informazioni geometriche vengono salvate in un file con estensione .npy. Il percorso di questo file va indicato nel parametro area_coordinates_path della sezione dataloader del file config.yml. Per comodità, tutti i file contenenti le coordinate sono raccolti nella cartella src/utils/coordinates del repository.
 
 *Attenzione*: la dimensione della schermata e dei frame delle registrazioni corrispondenti devono coincidere.
