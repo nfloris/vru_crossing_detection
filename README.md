@@ -99,9 +99,11 @@ Con un click destro del mouse è possibile inserire un’area centrata nel punto
  - ENTER → conferma dell’area
  - r → reset
 
-Durante la fase di modifica, l’area è mostrata in rosso; dopo la conferma con ENTER, viene evidenziata in verde. In questa fase è possibile assegnare la direzione di percorrenza prevista, cche rappresenta il movimento atteso attraverso quell’area e deve coincidere con la direzione dell’attraversamento pedonale a cui essa fa riferimento. Una freccia direzionale indicherà il verso di attraversamento ed è regolabile tramite i tasti a/d o trascinamento con il mouse. La conferma avviene con ENTER o doppio click destro. Per annullare l’inserimento di un’area è sufficiente premere r.
+Dopo la conferma con ENTER, è possibile assegnare la direzione di percorrenza prevista, cche rappresenta il movimento atteso attraverso quell’area e deve coincidere con la direzione dell’attraversamento pedonale a cui essa fa riferimento. Una freccia direzionale indicherà il verso di attraversamento ed è regolabile tramite i tasti a/d o trascinamento con il mouse. La conferma avviene con ENTER o doppio click destro. Per annullare l’inserimento di un’area è sufficiente premere r.
 
 Al termine della configurazione, le informazioni geometriche vengono salvate in un file con estensione .npy. Il percorso di questo file va indicato nel parametro area_coordinates_path della sezione dataloader del file config.yml. Per comodità, tutti i file contenenti le coordinate sono raccolti nella cartella src/utils/coordinates del repository.
+
+*Attenzione*: la dimensione della schermata e dei frame delle registrazioni corrispondenti devono coincidere.
 
 ### Step 3: Eseguire il file main.py 
 ```bash
