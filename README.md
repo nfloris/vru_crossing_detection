@@ -82,27 +82,32 @@ Accedere al codice sorgente dalla cartella *src* del repository. Dal file **conf
 Per comodità, tutti i video di input sono posizionati nella cartella *input_videos* del repository.
 
 ### Step 2: Selezione geometrica delle aree in prossimità degli attraversamenti pedonali
-Per fare in modo che il sistema sia in grado di generare allarmi per pedoni in procinto di attraversare la strada è mnecessario fornire delle informazioni preliminari sulla configurazione dello scenario, specificando le coordinate geografiche delle aree limitrofe agli attraversamenti.
-A tal proposito, il file **src/utils/select_area.py** permette, a partire da una schermata, di tracciare manualmente su schermo i contorni geometrici delle aree di interesse. 
-Con un click sullo schermo si potranno disegnare delle forme sferiche e ellittiche, editabili tramite i comandi elencati di seguito:
+Per consentire al sistema di generare allarmi per pedoni in procinto di attraversare, è necessario fornire alcune informazioni preliminari sulla configurazione dello scenario, specificando le coordinate delle aree adiacenti agli attraversamenti pedonali.
 
-     - a/d -> rotazione verso sinistra/destra
-     - w/e -> modifica dell'angolo iniziale/finale (permette di tracciare semicerchi)
-     - tasti direzionali -> permettono di spostare l'area lungo l'asse x e y
-     - ENTER -> conferma dell'area inserita
-     - r -> reset
-     - ESC -> chiusura del programma e salvataggio
+A questo scopo è disponibile lo script src/utils/select_area.py, che consente di disegnare manualmente i contorni geometrici delle aree di interesse direttamente su una schermata. Dopo aver eseguito il comando:
+```bash
+python3 select_area.py
+```
 
-Una volta terminata l'operazione le informazioni geometriche sulle aree inserite sono salvate in un file di estensione .npy. 
-Nella **dataloader** del file **config.yml** è possibile trovare il parametro **area_coordinates_path**, il quale contiene il percorso del file npy contenente le coordinate delle aree specificate per lo scenario di interesse. Per comodità, tutte i file di coordinate sono posizionati all'interno della cartella *src/utils/coordinates* del repository. 
+si aprirà una finestra di selezione in cui caricare un’immagine (formati supportati: png, jpg, jpeg, bmp), corrispondente a un frame o a una cattura dello scenario da analizzare.
 
+Con un click destro del mouse è possibile inserire un’area centrata nel punto selezionato. Tenendo premuto e trascinando, se ne possono regolare dimensioni, larghezza e altezza. Al rilascio del tasto, l’area rimane modificabile per rotazione e angoli iniziale/finale tramite i comandi da tastiera riportati di seguito:
+
+ - a/d → rotazione verso sinistra/destra
+ - w/e → modifica angolo iniziale/finale (permette di tracciare semicerchi)
+ - tasti direzionali → spostamento lungo assi x e y
+ - ENTER → conferma dell’area
+ - r → reset
+
+Durante la fase di modifica, l’area è mostrata in rosso; dopo la conferma con ENTER, viene evidenziata in verde. In questa fase è possibile assegnare la direzione di percorrenza prevista, cche rappresenta il movimento atteso attraverso quell’area e deve coincidere con la direzione dell’attraversamento pedonale a cui essa fa riferimento. Una freccia direzionale indicherà il verso di attraversamento ed è regolabile tramite i tasti a/d o trascinamento con il mouse. La conferma avviene con ENTER o doppio click destro. Per annullare l’inserimento di un’area è sufficiente premere r.
+
+Al termine della configurazione, le informazioni geometriche vengono salvate in un file con estensione .npy. Il percorso di questo file va indicato nel parametro area_coordinates_path della sezione dataloader del file config.yml. Per comodità, tutti i file contenenti le coordinate sono raccolti nella cartella src/utils/coordinates del repository.
 
 ### Step 3: Eseguire il file main.py 
 ```bash
 python3 main.py
 
 ```
-
 
 ## Risultati 
 
