@@ -1,4 +1,4 @@
-# yolov5-deepsort
+# VRU-CROSSING DETECTION
 
 ![Python Version](https://img.shields.io/badge/python-3.9-blue)
 ![PyTorch Version](https://img.shields.io/badge/PyTorch-2.0.0%2Bcu117-EE4C2C.svg?style=flat-square&logo=PyTorch&logoColor=white&logoWidth=40)
