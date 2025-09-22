@@ -117,18 +117,18 @@ Dal repository, è possibile scaricare il modello di YOLO addestrato per il task
 Il file .pt deve essere posizionato nella cartella principale del progetto.
 
 
-## Step 5: Configurazione dei parametri
+## Step 5: Configurazione dei parametri  
 
-Il file *config.yml* presente nella directory principale, oltre ai parametri già menzionati, include ulteriori opzioni configurabili utili alla personalizzazione di vari aspetti del sistema.
-Di seguito sono riportati i principali:
+Il file *config.yml*, situato nella directory principale, oltre ai parametri già citati, mette a disposizione ulteriori opzioni configurabili che consentono di personalizzare diversi aspetti del sistema.  
+Di seguito i principali:  
 
-  - *model name*: di default 'last.pt', deve corrispondere con il file path del modello custom che si sta utilizzando
-  - *tracked class*: una lista di classi da includere in esecuzione, quelle escluse verranno filtrate. La lista     completa delle classi è 'person-wheelchair', 'person-crutches', 'person-babywalker', 'person-no'.
-  - *confidence threshold*: la confidence corrisponde al valore di affidabilità che il modello di detection attribuisce ai propri rilevamenti. A seconda della threshold impostata (da 0 a 1) il sistema scarterà tutti i rilevamenti al di sotto della soglia (default 0.5).
-  - *disp_tracks*: se impostato a *true* verranno mostrati a run-time le traiettore predette dal tracker
-  - *disp_obj_track_box*: se impostato a *true* verranno mostrati a run-time i bounding box generati dal tracker
-  - *warning_sensibility*: corrisponde al livello di sensibilità attribuito al meccanismo algoritmico di allerta. Più la sensibilità è alta, più tolleranza ci sarà nella generazione di allarmi per un soggetto vulneravbile, e viceversa. Accetta valori da 0 a 1.
-   
+- *model name*: per default `last.pt`; deve corrispondere al file path del modello custom utilizzato.  
+- *tracked class*: elenco delle classi da includere in esecuzione; quelle non specificate verranno filtrate. Le classi disponibili sono: `person-wheelchair`, `person-crutches`, `person-babywalker`, `person-no`.  
+- *confidence threshold*: valore di affidabilità (da 0 a 1) che il modello di detection attribuisce ai propri rilevamenti. Il sistema scarterà quelli inferiori alla soglia impostata (default 0.5).  
+- *disp_tracks*: se impostato a *true*, mostra in tempo reale le traiettorie predette dal tracker.  
+- *disp_obj_track_box*: se impostato a *true*, visualizza in tempo reale i bounding box generati dal tracker.  
+- *warning_sensibility*: livello di sensibilità del meccanismo di allerta (da 0 a 1). Un valore più alto aumenta la tolleranza nella generazione di allarmi per un soggetto vulnerabile, mentre un valore più basso li rende più restrittivi.  
+
 
 ### Step 6: Eseguire il file main.py 
 ```bash
