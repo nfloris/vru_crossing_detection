@@ -121,7 +121,7 @@ python3 main.py
 
 Dei risultati video di esempio sono consultabili all'interno della cartella *outputs*
 
-![Shermata di esempio](images/concentric_band)
+![Shermata di esempio](images/concentric_band.png)
 
 ## Miglioramenti futuri
 
