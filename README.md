@@ -81,7 +81,7 @@ git clone https://github.com/nfloris/vru_crossing_detection
 Accedere al codice sorgente dalla cartella *src* del repository. Dal file **config.yml** è possibile impostare una serie di parametri di configurazione del progetto. Per impostare una sorgente video, è necessario modificare il parametro **input_path** dalla sezione **dataloader**.
 Per comodità, tutti i video di input sono posizionati nella cartella *input_videos* del repository.
 
-### Step 2: Selezione geometrica delle aree in prossimità degli attraversamenti pedonali
+### Step 3: Selezione geometrica delle aree in prossimità degli attraversamenti pedonali
 Per consentire al sistema di generare allarmi per pedoni in procinto di attraversare, è necessario fornire alcune informazioni preliminari sulla configurazione dello scenario, specificando le coordinate delle aree adiacenti agli attraversamenti pedonali.
 
 A questo scopo è disponibile lo script src/utils/select_area.py, che consente di disegnare manualmente i contorni geometrici delle aree di interesse direttamente su una schermata. Dopo aver eseguito il comando:
@@ -111,7 +111,26 @@ Al termine della configurazione, le informazioni geometriche vengono salvate in 
 
 *Attenzione*: la dimensione della schermata e dei frame delle registrazioni corrispondenti devono coincidere.
 
-### Step 3: Eseguire il file main.py 
+### Step 4: impostare il modello custom
+Dal repository, è possibile scaricare il modello di YOLO addestrato per il task di riferimento (last.pt).
+[CUSTOM YOLO MODEL](https://github.com/nfloris/vru_crossing_detection/blob/main/last.pt)
+Il file .pt deve essere posizionato nella cartella principale del progetto.
+
+
+## Step 5: Configurazione dei parametri
+
+Il file *config.yml* presente nella directory principale, oltre ai parametri già menzionati, include ulteriori opzioni configurabili utili alla personalizzazione di vari aspetti del sistema.
+Di seguito sono riportati i principali:
+
+  - *model name*: di default 'last.pt', deve corrispondere con il file path del modello custom che si sta utilizzando
+  - *tracked class*: una lista di classi da includere in esecuzione, quelle escluse verranno filtrate. La lista     completa delle classi è 'person-wheelchair', 'person-crutches', 'person-babywalker', 'person-no'.
+  - *confidence threshold*: la confidence corrisponde al valore di affidabilità che il modello di detection attribuisce ai propri rilevamenti. A seconda della threshold impostata (da 0 a 1) il sistema scarterà tutti i rilevamenti al di sotto della soglia (default 0.5).
+  - *disp_tracks*: se impostato a *true* verranno mostrati a run-time le traiettore predette dal tracker
+  - *disp_obj_track_box*: se impostato a *true* verranno mostrati a run-time i bounding box generati dal tracker
+  - *warning_sensibility*: corrisponde al livello di sensibilità attribuito al meccanismo algoritmico di allerta. Più la sensibilità è alta, più tolleranza ci sarà nella generazione di allarmi per un soggetto vulneravbile, e viceversa. Accetta valori da 0 a 1.
+   
+
+### Step 6: Eseguire il file main.py 
 ```bash
 python3 main.py
 
@@ -121,7 +140,7 @@ python3 main.py
 
 Dei risultati video di esempio sono consultabili all'interno della cartella *outputs*
 
-![Shermata di esempio](images/concentric_band.png)
+![Shermata di esempio](images/concentric-band.png)
 
 ## Miglioramenti futuri
 
@@ -131,10 +150,12 @@ Dei risultati video di esempio sono consultabili all'interno della cartella *out
 4. Esperimenti su ulteriori scenari sintetici e esperimenti sul campo.
 5. Post-processing dei rilevamenti e dei tracciamenti in modo da migliorare le prestazioni complessive del sistema
 
-
-   
 ## References
 
 * [YOLO Algorithm](https://arxiv.org/abs/1506.02640)
 * [DeepSORT code repository](https://github.com/nwojke/deep_sort)
 * [DATASET](https://universe.roboflow.com/yolotest-vzrks/person-mm3cw)
+* [CUSTOM YOLO MODEL](https://github.com/nfloris/vru_crossing_detection/blob/main/last.pt)
+* [Alcune videoclip di esempio](https://github.com/nfloris/vru_crossing_detection/tree/main/input_videos)
+* [Alcuni file di coordinate di esempio](https://github.com/nfloris/vru_crossing_detection/tree/main/src/utils/coordinates)
+
