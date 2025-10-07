@@ -78,8 +78,9 @@ git clone https://github.com/nfloris/vru_crossing_detection
 ```
 
 ### Step 2: Impostare una sorgente video
-Accedere al codice sorgente dalla cartella *src* del repository. Dal file **config.yml** è possibile impostare una serie di parametri di configurazione del progetto. Per impostare una sorgente video, è necessario modificare il parametro **input_path** dalla sezione **dataloader**.
-Per comodità, tutti i video di input sono posizionati nella cartella *input_videos* del repository.
+Accedere al codice sorgente dalla cartella *src* del repository. Dal file **config.yml** è possibile impostare una serie di parametri di configurazione del progetto.
+Il parametro **data_source** della sezione **data_loader** permette di selezionare la tipologia di sorgente video, tra "video file", "webcam" o "rtsp stream". In caso di sorgente video, specificare il percorso del file dal parametro **input_path**; per comodità, tutti i video di input sono posizionati nella cartella *input_videos* del repository.
+In caso di flusso RTSP, specificare l'indirizzo dello stream tramite il parametro **rtsp_stream**. 
 
 ### Step 3: Selezione geometrica delle aree in prossimità degli attraversamenti pedonali
 Per consentire al sistema di generare allarmi per pedoni in procinto di attraversare, è necessario fornire alcune informazioni preliminari sulla configurazione dello scenario, specificando le coordinate delle aree adiacenti agli attraversamenti pedonali.
